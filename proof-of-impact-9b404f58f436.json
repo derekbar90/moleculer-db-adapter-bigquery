@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "proof-of-impact",
+  "private_key_id": "9b404f58f43656c29d43927f1654fb1f24a1236a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCHbektT+ZEOcLd\n3RqYDs5ikyz5CLzVSPHYGhUJ91x1OW4jxuKt63mCirJ96COzNYxF1B3TV9dS7ptZ\ndwXWvB8WBr8ZRJ+e/2ZALYHcroQE4aTfwYZGHj8sV/Tnv5dTJG9Wr1XJBmjtuiNP\neELzbNBoJnJtFomBfytr9BAuvYBgN4noSSi2SQxZAcAuBhv+RvW0on3BLFwg50OE\n18TdB1+tajY+w/z+D/f92364p0Tkn36ZtSt9k2fnRULRx++IOyA7wTuK9160sapV\nvSExyeCIpkAE6jei2Spmj8FGLN30US60Wu8XhwzsESJw3bDwihw8M5OJRAHEHckh\nWPWrnU1fAgMBAAECggEAG84hq0d1x/kx/JpKPQEBN7Tu7VxxZLr6yHsmaarrRTga\n2GaboMixZG90kSwptEAgwi94Ri2JTIInzBkHTlzGZx/QeXAg86SNSkztljEQcu4f\nCz+xAVFxd/nBExm/iHb5EwuhqcnSnkhyuny/BjqHmXKXWLVhWwCQmjP8ZJRMuLQx\n+wxYksK9Jrig3WCyZOc9buUUOxBrOcONKdyPMfpUmQaSZZS6cc60+8SNYYw9OJca\nLuwSfMPIHh62kDrbhApSz4b6Qmm5Zx/xdrujhGccEqhi+ZvdNW266vYJrkF6U7q7\noXN/Q315R2umsflq3jaTO8AfyLzK5yzB/vdmxI22tQKBgQC7TqBTO2JvTGf+k0xV\n0qTqpUAqCxLM/NPSWcLAt78QUR9CqCbE1lnsplaTZc6FwgtQbPNcPCOJGCa77hpL\nT4k769+u2K7u68xQ7OxRVO2/WKq1HV9ZUU/uuvVoVnlXRhHT7XfkDvb3radbdCBy\nlLI5rxv5vjTf4m2HaGhUpZifKwKBgQC5GLnNcJBfK0FSwrxKMn07TBD2F78MaXnx\nvGfOK0jZzbh721n93Bmlz9PQ3dOzH6SJiSGiVs6mJJhm46a4kkVVi9NSi+iR3NQG\nUinlGqciUuocz/3h0rsozX99bndiZQ33cyl2aiQY/m5hGjU2hvdQ/562AFurg5Mu\np4iN2LMQnQKBgHIfE7vigLUDPpFzOZ1IvEZi7Ncw7AGNQZn2Kpy012qfooZAYW6o\nkx2Gs1UXQF9qvO4Bk7zsv1H2LxNtnQOpsBmcOysSxnK3pELiN5HORxTAdzHmdYO7\n8RGpQ4CQv1mXTaFsHBINtBdv7HniJSrqwjQ3JrphU2HdWZKY4IhCZN0FAoGAblTf\nxCbZ1/C3snZjuDKaVXNFFPwYpHRm/QJaOhmxBitLUYDyBpFhNGZKk1D29OnisRzt\n0I/ABGcB9Sqz4YdHDvQXFjhRfEjOlan6URdvEtWruVr9sdNkPrEn0oO7ZApqpdqe\nl3gzZjabYwQ1Pfh7iWullkVmXzlBzWiNzEekjT0CgYAPX3dblw8oNbgcpW496fuH\nfFmx+V7PzACeZXIgufHrqwfdhOSFFFjZrRTxkBIzPFy+/QAs05PlUS+u0B/R2koH\nSoSWJIsH13Ybdo6HqoqI1YHFhS4CIOHa+RueWGkCVDd/fj9QrvBEfKP2uHtkR/tm\nvQ6EMwVa93RA00dAYvmp/w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "staging-bigquery-event-data@proof-of-impact.iam.gserviceaccount.com",
+  "client_id": "109929029985702969557",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/staging-bigquery-event-data%40proof-of-impact.iam.gserviceaccount.com"
+}
