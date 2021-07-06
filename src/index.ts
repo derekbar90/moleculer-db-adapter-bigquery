@@ -163,7 +163,7 @@ class BigQueryDbAdapter {
   async findOne(query: Object) {
     const context = this.retrieveContext(query);
 
-    const compiledQuery = bq(`${context.tableName}.compiled`)
+    const compiledQuery = bq(`${context?.tableName}.compiled`)
       .where(query)
       .limit(1)
       .toString();
@@ -186,7 +186,7 @@ class BigQueryDbAdapter {
     const parsedContext = this.retrieveContext(context);
 
     const primaryKey = await this.bigQueryConfig.getIdKey();
-    const compiledQuery = bq(`${parsedContext.tableName}.compiled`)
+    const compiledQuery = bq(`${parsedContext?.tableName}.compiled`)
       .where({
         [primaryKey]: id,
       })
@@ -211,7 +211,7 @@ class BigQueryDbAdapter {
 
     const primaryKey = await this.bigQueryConfig.getIdKey();
 
-    const compiledQuery = bq(`${parsedContext.tableName}.compiled`)
+    const compiledQuery = bq(`${parsedContext?.tableName}.compiled`)
       .whereIn(primaryKey, idList)
       .toString();
 
@@ -253,14 +253,14 @@ class BigQueryDbAdapter {
 
     const compiledQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext?.tableName}.compiled`)
           .insert({
             [primaryKey]: entity[primaryKey],
           })
           .toString()
       )};
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext?.tableName}.compiled`)
           .whereIn(primaryKey, [entity[primaryKey]])
           .toString()
       )};
@@ -404,7 +404,7 @@ class BigQueryDbAdapter {
         "Unable to retrieve private context, please make sure you apply one via a hook."
       );
     }
-    
+
     const compiledPreQuery = `
       ${this.formatQuery(
         bq(`${parsedContext.tableName}.compiled`).where(where).toString()
@@ -499,12 +499,12 @@ class BigQueryDbAdapter {
     return json;
   }
 
-  async createCursor(params?: { [key: string]: any }, isCounting?: boolean) {
+  async createCursor(params: { [key: string]: any } = {}, isCounting?: boolean) {
     const context = this.retrieveContext(params);
-    let q = bq(`${context.tableName}.compiled`);
+    let q = bq(`${context?.tableName}.compiled`);
     if (Object.keys(params || {}).length > 0) {
       // Full-text search
-      if (_.isString(params.search) && params.search !== "") {
+      if (_.isString(params?.search) && params?.search !== "") {
         let fields = [];
         if (params.searchFields) {
           fields = _.isString(params.searchFields)
