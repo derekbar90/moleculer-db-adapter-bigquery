@@ -66,6 +66,9 @@ const bigQueryConfig = {
   getIdKey: async () => {
     return "Contacto__c";
   },
+  getTableName: (context) => {
+    return `Impact_${context.impact.replace(/-/g, "_")}`
+  }
 };
 const serviceHooks = {
   before: {
@@ -86,23 +89,17 @@ const adapter_private_context = {
 
 const manageParams = (params) => {
   if (Array.isArray(params)) {
-    return [
-      params.map((param) => {
-        return {
-          adapter_private_context: adapter_private_context,
-          ...param,
-        };
-      }),
-      params,
-    ];
-  } else {
-    return [
-      {
+    return params.map((param) => {
+      return {
         adapter_private_context: adapter_private_context,
-        ...params,
-      },
-      params,
-    ];
+        ...param,
+      };
+    });
+  } else {
+    return {
+      adapter_private_context: adapter_private_context,
+      ...params,
+    };
   }
 };
 
@@ -194,34 +191,34 @@ describe("Test BigQueryAdapter", () => {
 
     describe("Test createCursor", () => {
       it("call with only context", async () => {
-        const [params, filteredParams] = manageParams({});
+        const params = manageParams({});
         const result = await adapter.createCursor(params);
         expect(result.length).toBeGreaterThan(1);
       });
 
       it("call without params as counting", async () => {
-        const [params, filteredParams] = manageParams({});
+        const params = manageParams({});
         const result = await adapter.createCursor(params, true);
         expect(result).toBeGreaterThan(100);
       });
 
       it("call with query", async () => {
         let query = {};
-        const [params, filteredParams] = manageParams({ query });
+        const params = manageParams({ query });
         const result = await adapter.createCursor(params);
         expect(result.length).toBeGreaterThan(100);
       });
 
       it("call with query & counting", async () => {
         let query = {};
-        const [params, filteredParams] = manageParams({ query });
+        const params = manageParams({ query });
         const result = await adapter.createCursor(params, true);
         expect(result).toBeGreaterThan(100);
       });
 
       it("call with sort string", async () => {
         let query = {};
-        const [params, filteredParams] = manageParams({
+        const params = manageParams({
           query,
           sort: "-Contacto__c",
         });
@@ -233,7 +230,7 @@ describe("Test BigQueryAdapter", () => {
 
       it("call with sort array", async () => {
         let query = {};
-        const [params, filteredParams] = manageParams({
+        const params = manageParams({
           query,
         });
         const result = await adapter.createCursor({ ...params, sort: ["Contacto__c", "RANGO_EDAD"] });
@@ -243,7 +240,7 @@ describe("Test BigQueryAdapter", () => {
 
       it("call with sort object", async () => {
         let query = {};
-        const [params, filteredParams] = manageParams({
+        const params = manageParams({
           query,
         });
         
@@ -254,7 +251,7 @@ describe("Test BigQueryAdapter", () => {
 
       it("call with limit & offset", async () => {
         let query = {};
-        const [params, filteredParams] = manageParams({
+        const params = manageParams({
           query,
           sort: { Contacto__c: 1, RANGO_EDAD: -1 }
         });
@@ -265,7 +262,7 @@ describe("Test BigQueryAdapter", () => {
 
       it("call with full-text search without query", async () => {
         let query = {};
-        const [params, filteredParams] = manageParams({
+        const params = manageParams({
           query,
           sort: { Contacto__c: 1, RANGO_EDAD: -1 }
         });
@@ -279,7 +276,7 @@ describe("Test BigQueryAdapter", () => {
 
       it("call with full-text search with query", async () => {
         let query = { COMORA_MAX_CLIE: 7 };
-        const [params, filteredParams] = manageParams({
+        const params = manageParams({
           query,
           sort: { Contacto__c: 1, RANGO_EDAD: -1 }
         });
@@ -327,7 +324,7 @@ describe("Test BigQueryAdapter", () => {
     });
 
     it("call find", () => {
-      const [params, filteredParams] = manageParams({});
+      const params = manageParams({});
       return adapter
         .find(params)
         .catch(protectReject)
@@ -338,7 +335,7 @@ describe("Test BigQueryAdapter", () => {
 
     it("call findOne", () => {
       let age = { COMORA_MAX_CLIE: 3 };
-      const [params, filteredParams] = manageParams(age);
+      const params = manageParams(age);
       return adapter
         .findOne(params)
         .catch(protectReject)
@@ -350,7 +347,7 @@ describe("Test BigQueryAdapter", () => {
     it("call findByPk", () => {
       // adapter.findById.mockClear();
 
-      const [params, filteredParams] = manageParams({});
+      const params = manageParams({});
 
       return adapter
         .findById(params, "0035A00003XiSdEQAV")
@@ -362,7 +359,7 @@ describe("Test BigQueryAdapter", () => {
 
     it("call findByIds", () => {
       // adapter.model.findAll.mockClear();
-      const [params, filteredParams] = manageParams({});
+      const params = manageParams({});
 
       return adapter
         .findByIds(params, ["0035A00003XiSdEQAV"])
@@ -375,7 +372,7 @@ describe("Test BigQueryAdapter", () => {
     it("call count", () => {
       let origParams = {};
 
-      const [params, filteredParams] = manageParams(origParams);
+      const params = manageParams(origParams);
 
       return adapter
         .count(params)
@@ -389,7 +386,7 @@ describe("Test BigQueryAdapter", () => {
       let entity = {
         Contacto__c: Number(Math.random() * 100000).toFixed(0),
       };
-      const [params, filteredParams] = manageParams(entity);
+      const params = manageParams(entity);
       return adapter
         .insert(params)
         .catch(protectReject)
@@ -404,7 +401,7 @@ describe("Test BigQueryAdapter", () => {
         { Contacto__c: Number(Math.random() * 100000).toFixed(0) },
       ];
 
-      const [params, filteredParams] = manageParams(entities);
+      const params = manageParams(entities);
 
       return adapter
         .insertMany(params)
@@ -436,7 +433,7 @@ describe("Test BigQueryAdapter", () => {
         RANGO_EDAD: `0-${Number(Math.random() * 100000).toFixed(0)}`,
       };
 
-      const [params, filteredParams] = manageParams(update);
+      const params = manageParams(update);
 
       return adapter
         .updateMany(where, params)
@@ -452,7 +449,7 @@ describe("Test BigQueryAdapter", () => {
         RANGO_EDAD: `0-${Number(Math.random() * 100000).toFixed(0)}`,
       };
 
-      const [params, filteredParams] = manageParams(update);
+      const params = manageParams(update);
 
       return adapter
         .updateById(id, params)
@@ -469,9 +466,9 @@ describe("Test BigQueryAdapter", () => {
         Contacto__c: id,
       };
 
-      let [params, filteredParams] = manageParams(entity);
+      let params = manageParams(entity);
       const inserted = await adapter.insert(params);
-      let [params2, filteredParams2] = manageParams(entity);
+      let params2 = manageParams(entity);
       return adapter
         .removeMany(params2)
         .catch(protectReject)
@@ -487,8 +484,8 @@ describe("Test BigQueryAdapter", () => {
         Contacto__c: id,
       };
 
-      let [params] = manageParams(entity);
-      let [params2] = manageParams(entity);
+      let params = manageParams(entity);
+      let params2 = manageParams(entity);
       await adapter.insert(params);
 
       return adapter

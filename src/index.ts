@@ -105,7 +105,7 @@ class BigQueryDbAdapter {
 
           delete param.adapter_private_context;
 
-          context.tableName = `Impact_${context.impact.replace(/-/g, "_")}`;
+          context.tableName = this.bigQueryConfig.getTableName(context)
 
           return context;
         }),
@@ -121,7 +121,7 @@ class BigQueryDbAdapter {
 
       delete params.adapter_private_context;
 
-      context.tableName = `Impact_${context.impact.replace(/-/g, "_")}`;
+      context.tableName = this.bigQueryConfig.getTableName(context)
 
       return context;
     }
