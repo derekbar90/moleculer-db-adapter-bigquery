@@ -163,7 +163,7 @@ class BigQueryDbAdapter {
   async findOne(query: Object) {
     const context = this.retrieveContext(query);
 
-    const compiledQuery = bq(`${context?.tableName}.compiled`)
+    const compiledQuery = bq(`${context?.tableName}`)
       .where(query)
       .limit(1)
       .toString();

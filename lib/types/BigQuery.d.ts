@@ -4,6 +4,7 @@ export declare type BigQueryMultiRegions = "ASIA" | "US" | "EU";
 export declare type BigQueryDbAdapterOptions = {
     getRegion: (ctx: Context) => Promise<BigQueryRegions | BigQueryMultiRegions>;
     getIdKey: (ctx?: Context) => Promise<string>;
+    getTableName: (ctx?: BigQueryContext) => string;
     projectId: string;
     showLogs?: boolean;
 };
