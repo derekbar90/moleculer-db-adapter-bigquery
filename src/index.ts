@@ -499,6 +499,17 @@ class BigQueryDbAdapter {
     return json;
   }
 
+  private async  migrateIdParamToPrimaryKey(whereObject: { [key: string]: any }) {
+    if(whereObject.id){
+      const primaryKey = await this.bigQueryConfig.getIdKey();
+      Object.assign(whereObject, {
+        [primaryKey]: whereObject.id
+      })
+      delete whereObject.id
+    }
+    return whereObject;
+  }
+
   async createCursor(params: { [key: string]: any } = {}, isCounting?: boolean) {
     const context = this.retrieveContext(params);
     let q = bq(`${context?.tableName}`);
@@ -513,7 +524,8 @@ class BigQueryDbAdapter {
         }
 
         if (params.query) {
-          q.where(params.query);
+          const whereParams = await this.migrateIdParamToPrimaryKey(params.query)
+          q.where(whereParams);
         }
 
         if (fields.length > 0) {
@@ -526,7 +538,8 @@ class BigQueryDbAdapter {
           this.transformSort(q, params.sort);
         }
       } else {
-        q.where(params.query);
+        const whereParams = await this.migrateIdParamToPrimaryKey(params.query)
+        q.where(whereParams);
         // Sort
         if (params.sort) {
           this.transformSort(q, params.sort);
