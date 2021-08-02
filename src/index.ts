@@ -186,7 +186,7 @@ class BigQueryDbAdapter {
     const parsedContext = this.retrieveContext(context);
 
     const primaryKey = await this.bigQueryConfig.getIdKey();
-    const compiledQuery = bq(`${parsedContext?.tableName}.compiled`)
+    const compiledQuery = bq(`${parsedContext?.tableName}`)
       .where({
         [primaryKey]: id,
       })
@@ -211,7 +211,7 @@ class BigQueryDbAdapter {
 
     const primaryKey = await this.bigQueryConfig.getIdKey();
 
-    const compiledQuery = bq(`${parsedContext?.tableName}.compiled`)
+    const compiledQuery = bq(`${parsedContext?.tableName}`)
       .whereIn(primaryKey, idList)
       .toString();
 
@@ -253,14 +253,14 @@ class BigQueryDbAdapter {
 
     const compiledQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext?.tableName}.compiled`)
+        bq(`${parsedContext?.tableName}`)
           .insert({
             [primaryKey]: entity[primaryKey],
           })
           .toString()
       )};
       ${this.formatQuery(
-        bq(`${parsedContext?.tableName}.compiled`)
+        bq(`${parsedContext?.tableName}`)
           .whereIn(primaryKey, [entity[primaryKey]])
           .toString()
       )};
@@ -293,10 +293,10 @@ class BigQueryDbAdapter {
 
     const compiledQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`).insert(entities).toString()
+        bq(`${parsedContext.tableName}`).insert(entities).toString()
       )};
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext.tableName}`)
           .whereIn(
             primaryKey,
             entities.map((entity: any) => entity[primaryKey])
@@ -330,13 +330,13 @@ class BigQueryDbAdapter {
 
     const compiledQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext.tableName}`)
           .where(where)
           .update(update)
           .toString()
       )};
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`).where(where).toString()
+        bq(`${parsedContext.tableName}`).where(where).toString()
       )};
     `;
 
@@ -367,7 +367,7 @@ class BigQueryDbAdapter {
 
     const compiledQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext.tableName}`)
           .where({
             [primaryKey]: id,
           })
@@ -375,7 +375,7 @@ class BigQueryDbAdapter {
           .toString()
       )};
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext.tableName}`)
           .where({
             [primaryKey]: id,
           })
@@ -407,12 +407,12 @@ class BigQueryDbAdapter {
 
     const compiledPreQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`).where(where).toString()
+        bq(`${parsedContext.tableName}`).where(where).toString()
       )};
     `;
     const compiledQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`).where(where).del().toString()
+        bq(`${parsedContext.tableName}`).where(where).del().toString()
       )};
     `;
 
@@ -447,7 +447,7 @@ class BigQueryDbAdapter {
 
     const compiledPreQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext.tableName}`)
           .where({
             [primaryKey]: _id,
           })
@@ -456,7 +456,7 @@ class BigQueryDbAdapter {
     `;
     const compiledQuery = `
       ${this.formatQuery(
-        bq(`${parsedContext.tableName}.compiled`)
+        bq(`${parsedContext.tableName}`)
           .where({
             [primaryKey]: _id,
           })
@@ -501,7 +501,7 @@ class BigQueryDbAdapter {
 
   async createCursor(params: { [key: string]: any } = {}, isCounting?: boolean) {
     const context = this.retrieveContext(params);
-    let q = bq(`${context?.tableName}.compiled`);
+    let q = bq(`${context?.tableName}`);
     if (Object.keys(params || {}).length > 0) {
       // Full-text search
       if (_.isString(params?.search) && params?.search !== "") {

@@ -67,7 +67,7 @@ const bigQueryConfig = {
     return "Contacto__c";
   },
   getTableName: (context) => {
-    return `Impact_${context.impact.replace(/-/g, "_")}`
+    return `Impact_${context.impact.replace(/-/g, "_")}.compiled`
   }
 };
 const serviceHooks = {
