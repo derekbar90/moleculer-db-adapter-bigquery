@@ -89,7 +89,7 @@ class BigQueryDbAdapter {
     return Promise.resolve(true);
   }
 
-  retrieveContext(
+  async retrieveContext(
     params: { [key: string]: any } | Array<{ [key: string]: any }>
   ) {
     if (Array.isArray(params)) {
@@ -161,14 +161,14 @@ class BigQueryDbAdapter {
    * @memberof MemoryDbAdapter
    */
   async findOne(query: Object) {
-    const context = this.retrieveContext(query);
+    const context = await this.retrieveContext(query);
 
     const compiledQuery = bq(`${context?.tableName}`)
       .where(query)
       .limit(1)
       .toString();
 
-    const results = await this.query(this.formatQuery(compiledQuery), {});
+    const results = await this.query(this.formatQuery(compiledQuery), { location: context?.region });
 
     //@ts-ignore
     return results.shift();
@@ -183,7 +183,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async findById(context: BigQueryContext, id: string) {
-    const parsedContext = this.retrieveContext(context);
+    const parsedContext = await this.retrieveContext(context);
 
     const primaryKey = await this.bigQueryConfig.getIdKey();
     const compiledQuery = bq(`${parsedContext?.tableName}`)
@@ -193,7 +193,7 @@ class BigQueryDbAdapter {
       .limit(1)
       .toString();
 
-    const results = await this.query(this.formatQuery(compiledQuery), {});
+    const results = await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     return results.shift();
   }
@@ -207,7 +207,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async findByIds(context: BigQueryContext, idList: Array<string>) {
-    const parsedContext = this.retrieveContext(context);
+    const parsedContext = await this.retrieveContext(context);
 
     const primaryKey = await this.bigQueryConfig.getIdKey();
 
@@ -215,7 +215,7 @@ class BigQueryDbAdapter {
       .whereIn(primaryKey, idList)
       .toString();
 
-    const results = await this.query(this.formatQuery(compiledQuery), {});
+    const results = await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     //@ts-ignore
     return results;
@@ -247,7 +247,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async insert(entity: { [key: string]: any }) {
-    const parsedContext = this.retrieveContext(entity);
+    const parsedContext = await this.retrieveContext(entity);
 
     const primaryKey = await this.bigQueryConfig.getIdKey();
 
@@ -266,7 +266,7 @@ class BigQueryDbAdapter {
       )};
     `;
 
-    const results = await this.query(this.formatQuery(compiledQuery), {});
+    const results = await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     return results;
   }
@@ -281,7 +281,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async insertMany(entities: Array<Object>, opts = { returning: true }) {
-    const parsedContext = this.retrieveContext(entities);
+    const parsedContext = await this.retrieveContext(entities);
 
     if (parsedContext == null) {
       throw new Moleculer.Errors.MoleculerError(
@@ -305,7 +305,7 @@ class BigQueryDbAdapter {
       )};
     `;
 
-    const results = await this.query(this.formatQuery(compiledQuery), {});
+    const results = await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     return results;
   }
@@ -320,7 +320,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async updateMany(where: Object, update: Object) {
-    const parsedContext = this.retrieveContext(update);
+    const parsedContext = await this.retrieveContext(update);
 
     if (parsedContext == null) {
       throw new Moleculer.Errors.MoleculerError(
@@ -340,7 +340,7 @@ class BigQueryDbAdapter {
       )};
     `;
 
-    const results = await this.query(this.formatQuery(compiledQuery), {});
+    const results = await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     return results;
   }
@@ -355,7 +355,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async updateById(id: string, update: Model) {
-    const parsedContext = this.retrieveContext(update);
+    const parsedContext = await this.retrieveContext(update);
 
     if (parsedContext == null) {
       throw new Moleculer.Errors.MoleculerError(
@@ -383,7 +383,7 @@ class BigQueryDbAdapter {
       )};
     `;
 
-    const results = await this.query(this.formatQuery(compiledQuery), {});
+    const results = await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     return results;
   }
@@ -397,7 +397,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async removeMany(where: Object) {
-    const parsedContext = this.retrieveContext(where);
+    const parsedContext = await this.retrieveContext(where);
 
     if (parsedContext == null) {
       throw new Moleculer.Errors.MoleculerError(
@@ -418,10 +418,10 @@ class BigQueryDbAdapter {
 
     const entitiesToBeRemoved = await this.query(
       this.formatQuery(compiledPreQuery),
-      {}
+      { location: parsedContext?.region }
     );
 
-    await this.query(this.formatQuery(compiledQuery), {});
+    await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     return entitiesToBeRemoved;
   }
@@ -435,7 +435,7 @@ class BigQueryDbAdapter {
    * @memberof BigQueryDbAdapter
    */
   async removeById(context: BigQueryContext, _id: string) {
-    const parsedContext = this.retrieveContext(context);
+    const parsedContext = await this.retrieveContext(context);
 
     if (parsedContext == null) {
       throw new Moleculer.Errors.MoleculerError(
@@ -467,10 +467,10 @@ class BigQueryDbAdapter {
 
     const entitiesToBeRemoved = await this.query(
       this.formatQuery(compiledPreQuery),
-      {}
+      { location: parsedContext?.region }
     );
 
-    await this.query(this.formatQuery(compiledQuery), {});
+    await this.query(this.formatQuery(compiledQuery), { location: parsedContext?.region });
 
     return entitiesToBeRemoved;
   }
@@ -514,7 +514,7 @@ class BigQueryDbAdapter {
   }
 
   async createCursor(params: { [key: string]: any } = {}, isCounting?: boolean) {
-    const context = this.retrieveContext(params);
+    const context = await this.retrieveContext(params);
     let q = bq(`${context?.tableName}`);
     if (Object.keys(params || {}).length > 0) {
       // Full-text search
@@ -572,7 +572,7 @@ class BigQueryDbAdapter {
 
     const formattedQuery = this.formatQuery(query);
       
-    const result = await this.query(formattedQuery, {})
+    const result = await this.query(formattedQuery, { location: context?.region })
     
     return isCounting ? result.shift()['f0_'] : result
   }

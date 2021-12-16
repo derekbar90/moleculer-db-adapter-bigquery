@@ -16,6 +16,7 @@ export type BigQueryContext = {
   org: string;
   impact: string;
   tableName?: string;
+  region: string;
 }
 
 export interface TableSchemaFragment {
