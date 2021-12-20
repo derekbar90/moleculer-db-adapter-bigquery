@@ -7,6 +7,7 @@ export  type BigQueryDbAdapterOptions = {
   getRegion: (ctx: Context) => Promise<BigQueryRegions | BigQueryMultiRegions>;
   getIdKey: (ctx?: Context) => Promise<string>;
   getTableName: (ctx?: BigQueryContext) => string;
+  queryWrapper?: (query: string) => string;
   queryBlacklist?: Array<string>;
   projectId: string;
   showLogs?: boolean;

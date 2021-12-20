@@ -500,17 +500,17 @@ class BigQueryDbAdapter {
   }
 
   private async  migrateIdParamToPrimaryKey(whereObject: { [key: string]: any }) {
-    if(whereObject.id){
+    const whereObjectCopy = { ...whereObject };
+    if(whereObjectCopy.id){
       const primaryKey = await this.bigQueryConfig.getIdKey();
-      Object.assign(whereObject, {
-        [primaryKey]: whereObject.id
+      Object.assign(whereObjectCopy, {
+        [primaryKey]: whereObjectCopy.id
       })
-
-      for(const backlistedKey of (this.bigQueryConfig.queryBlacklist || [])) {
-        delete whereObject[backlistedKey]
-      }
     }
-    return whereObject;
+    for(const backlistedKey of (this.bigQueryConfig.queryBlacklist || [])) {
+      delete whereObjectCopy[backlistedKey]
+    }
+    return whereObjectCopy;
   }
 
   async createCursor(params: { [key: string]: any } = {}, isCounting?: boolean) {
@@ -704,8 +704,11 @@ class BigQueryDbAdapter {
 
   async query(query: string, queryOptions: JobOptions) {
     // For all options, see https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query
+
+    let formattedQuery = this.bigQueryConfig.queryWrapper ? this.bigQueryConfig.queryWrapper(query) : query;
+
     const options = {
-      query: query,
+      query: formattedQuery,
       // Location must match that of the dataset(s) referenced in the query.
       location: "US",
       ...queryOptions,
