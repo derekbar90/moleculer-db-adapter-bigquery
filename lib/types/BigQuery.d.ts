@@ -16,6 +16,7 @@ export declare type BigQueryContext = {
     tableName?: string;
     region: string;
     version: string;
+    activeState: string;
 };
 export interface TableSchemaFragment {
     table_catalog: string;
