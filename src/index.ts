@@ -705,7 +705,7 @@ class BigQueryDbAdapter {
   async query(query: string, queryOptions: JobOptions) {
     // For all options, see https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query
 
-    let formattedQuery = this.bigQueryConfig.queryWrapper ? this.bigQueryConfig.queryWrapper(query) : query;
+    let formattedQuery = this.bigQueryConfig.queryWrapper ? this.bigQueryConfig.queryWrapper(query, queryOptions.location || 'US') : query;
 
     const options = {
       query: formattedQuery,
