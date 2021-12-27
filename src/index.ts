@@ -702,10 +702,10 @@ class BigQueryDbAdapter {
   //   return sqlModel;
   // }
 
-  async query(query: string, queryOptions: JobOptions) {
+  async query(query: string, queryOptions: JobOptions | { skipWrapper: boolean }) {
     // For all options, see https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query
-
-    let formattedQuery = this.bigQueryConfig.queryWrapper ? this.bigQueryConfig.queryWrapper(query, queryOptions.location || 'US') : query;
+    // @ts-ignore
+    let formattedQuery = this.bigQueryConfig.queryWrapper && !queryOptions.skipWrapper ? this.bigQueryConfig.queryWrapper(query, queryOptions.location || 'US') : query;
 
     const options = {
       query: formattedQuery,

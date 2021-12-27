@@ -1,6 +1,6 @@
 {
   "name": "@thesatoshicompany/moleculer-db-adapter-bigquery",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "SQL adapter with BigQuery for Moleculer DB service",
   "main": "lib/index.js",
   "typings": "lib/types/index.d.ts",
